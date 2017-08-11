@@ -1,0 +1,12 @@
+[
+  {
+    "name": "changes",
+    "template": "{protocol}://{host}/GetAreaChanges.vcx?query=changes{&usr,pwd}",
+    "timeout": 5000
+  },
+  {
+    "name": "remove",
+    "template": "{protocol}://{host}/GetAreaChanges.vcx?query=remove{&usr,pwd,token}",
+    "retries": 2
+  }
+]

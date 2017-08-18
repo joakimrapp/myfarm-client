@@ -8,5 +8,13 @@
     "name": "remove",
     "template": "{protocol}://{host}/GetAreaChanges.vcx?query=remove{&usr,pwd,token}",
     "retries": 2
+  },
+  {
+    "name": "vcs",
+    "template": "{protocol}://{host}/GetAreaChanges.vcx?query=areas{&usr,pwd}"
+  },
+  {
+    "name": "vc",
+    "template": "{protocol}://{host}/GetAreaChanges.vcx?query=area{&usr,pwd,vc}"
   }
 ]

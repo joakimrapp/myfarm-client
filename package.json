@@ -23,6 +23,8 @@
     "@jrapp/node-project-setup": "*"
   },
   "dependencies": {
-    "@jrapp/url-templating": "*"
+    "@jrapp/promise-memory-cache": "*",
+    "@jrapp/url-templating": "*",
+    "iso-3166-2": "0.6.0"
   }
 }

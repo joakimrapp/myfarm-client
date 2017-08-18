@@ -12,7 +12,12 @@ module.exports = ( host, usr, pwd, protocol = 'http' ) => {
 			 	.get()
 			 	.invoke() } );
 		}, {} );
-	return {
-		areaChanges: require( './functions/areaChanges.js' )( functions )
-	};
+	const areaChanges = require( './functions/areaChanges.js' )( functions );
+	const vcs = require( './functions/vcs.js' )( functions );
+	const vc = require( './functions/vc.js' )( functions );
+	const close = () => Promise.all( [
+		vcs.clear(),
+		vc.clear()
+	] );
+	return { areaChanges, vcs, vc, close };
 };

@@ -1,6 +1,6 @@
 module.exports = ( host, usr, pwd, protocol = 'http' ) => {
 	const eventEmitter = new ( require( 'events' ) ).EventEmitter();
-	const request = require( './request/request.js' )( eventEmitter );
+	const request = require( './request/request.js' );
 	const urlTemplating = require( '@jrapp/url-templating' );
 	const functions = require( './configuration.json' )
 		.reduce( ( functions, { name, template, timeout = 1000, retries = 0 } ) => {

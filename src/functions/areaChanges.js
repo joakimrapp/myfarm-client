@@ -1,4 +1,4 @@
-module.exports = ( functions ) => {
+module.exports = ( functions, eventEmitter ) => {
 	class Changes {
 		constructor() {
 			this.promise = functions.changes().then( ( { text, time } ) => {

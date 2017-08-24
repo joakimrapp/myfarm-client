@@ -2,7 +2,6 @@ const http = require( 'http' );
 const https = require( 'https' );
 const Buffer = require( 'buffer' );
 const Response = require( './Response.js' );
-
 class Request extends Promise {
 	url( value ) { return this.then( configuration => Object.assign( configuration, { url: value } ) ); }
 	timeout( value ) { return this.then( configuration => Object.assign( configuration, { timeout: value } ) ); }
@@ -65,8 +64,11 @@ class Request extends Promise {
 			req.end();
 		} );
 	}
+	invoked( value ) { return this.then( configuration => Object.assign( configuration, { invoked: value } ) ); }
 	invoke( ...args ) {
-		const pending = this.then( configuration => Request.invoke( configuration ) );
+		const pending = this.then( configuration => configuration.invoked ?
+			Request.invoke( configuration ).then( ( response ) => ( process.nextTick( configuration.invoked, response ), response ) ) :
+			Request.invoke( configuration ) );
 		return args.length ? pending.then( ...args ) : pending;
 	}
 }

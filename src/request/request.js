@@ -44,7 +44,7 @@ class Request extends Promise {
 			payload: value
 		} ) ).build();
 	}
-	static invoke( { options, payload, retries = 0 }, retry = 0 ) {
+	static invoke( { options, payload, retries = 0, retry }, retryCount = 0 ) {
 		return new Promise( ( resolve, reject ) => {
 			const timestamp = Date.now();
 			const req = http.request( options, res => {
@@ -57,14 +57,17 @@ class Request extends Promise {
 			} );
 			let timeout = false;
 			req.on( 'timeout', () => ( ( timeout = true ), req.abort() ) );
-			req.on( 'error', ( err ) => ( ( timeout ) && ( retry < retries ) ) ?
-				resolve( Request.invoke( { options, payload, retries }, retry + 1 ) ) : reject( { timeout, err } ) );
+			req.on( 'error', ( err ) => ( ( timeout ) && ( retryCount < retries ) ) ?
+				( retry ? process.nextTick( retry, { retry: retryCount, retries } ) : undefined,
+					resolve( Request.invoke( { options, payload, retries }, retryCount + 1 ) ) ) :
+				reject( { time: Date.now() - timestamp, retries: retryCount, timeout, err } ) );
 			if( payload )
 				req.write( payload );
 			req.end();
 		} );
 	}
 	invoked( value ) { return this.then( configuration => Object.assign( configuration, { invoked: value } ) ); }
+	retry( value ) { return this.then( configuration => Object.assign( configuration, { retry: value } ) ); }
 	invoke( ...args ) {
 		const pending = this.then( configuration => configuration.invoked ?
 			Request.invoke( configuration ).then( ( response ) => ( process.nextTick( configuration.invoked, response ), response ) ) :
